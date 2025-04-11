@@ -16,7 +16,7 @@ O objetivo principal do projeto é criar um sistema que:
 - **PostgreSQL**: Sistema gerenciador de banco de dados relacional;
 - **Python 3**: Linguagem utilizada para consumir e manipular os dados;
 - **xhtml2pdf**: Biblioteca para geração de arquivos PDF a partir de conteúdo HTML;
-- **psycopg2**: Biblioteca de conexão entre Python e PostgreSQL.
+- **jinja2**: Biblioteca de templates HTML no Python
 
 ## 🗃️ Estrutura do Banco de Dados
 
