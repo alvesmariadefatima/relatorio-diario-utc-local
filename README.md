@@ -57,17 +57,6 @@ O sistema conta com as seguintes funcionalidades principais:
 
 📂 Salvamento e visualização automática do PDF: O arquivo é salvo na raiz do projeto e aberto automaticamente após sua criação.
 
-## ✅ Requisitos
-
-Crie um ambiente virtual e instale as dependências com:
-
-```pip install -r requirements.txt```
-
-📁 requirements.txt
-
-- psycopg2
-- xhtml2pdf
-
 ### 🧪 Como Executar
 Crie as tabelas no PostgreSQL com os comandos SQL disponíveis no projeto;
 
