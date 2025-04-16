@@ -4,9 +4,9 @@ from weasyprint import HTML
 # Conecta ao banco PostgreSQL
 conn = psycopg2.connect(
     host="localhost",
-    dbname="projeto_utcs_vital",
-    user="postgres",
-    password="123456"
+    dbname="nomebancodedados",
+    user="usuariobanco",
+    password="senhabanco"
 )
 cursor = conn.cursor()
 
