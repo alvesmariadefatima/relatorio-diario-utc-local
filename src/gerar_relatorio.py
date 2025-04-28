@@ -1,28 +1,61 @@
 import psycopg2
-from weasyprint import HTML
+from xhtml2pdf import pisa
 
-# Conecta ao banco PostgreSQL
-conn = psycopg2.connect(
-    host="localhost",
-    dbname="nomebancodedados",
-    user="usuariobanco",
-    password="senhabanco"
-)
-cursor = conn.cursor()
+# Função para gerar o PDF a partir de HTML
+def converter_html_para_pdf(source_html, output_filename):
+    with open(output_filename, "wb") as output_file:
+        pisa_status = pisa.CreatePDF(source_html, dest=output_file)
+    return not pisa_status.err
 
-# Chama a função que gera o HTML no banco
-cursor.execute("SELECT gerar_relatorio_html();")
-html_conteudo = cursor.fetchone()[0]
+# Conectar ao banco de dados PostgreSQL
+def conectar_banco():
+    try:
+        conn = psycopg2.connect(
+            host="localhost",       # Endereço do banco
+            dbname="nomedobanco",     # Nome do banco de dados
+            user="nomedousuario",     # Usuário do banco de dados
+            password="senhabanco"    # Senha do banco de dados
+        )
+        return conn
+    except Exception as e:
+        print(f"Erro ao conectar ao banco de dados: {e}")
+        return None
 
-# Salva o HTML como arquivo
-with open("relatorio_clima.html", "w", encoding="utf-8") as arquivo_html:
-    arquivo_html.write(html_conteudo)
+# Obter o conteúdo HTML do banco de dados
+def obter_html_do_banco(cursor):
+    try:
+        cursor.execute("SELECT gerar_relatorio_html();")  # Chame sua função SQL ou query
+        html_conteudo = cursor.fetchone()[0]
+        return html_conteudo
+    except Exception as e:
+        print(f"Erro ao executar consulta SQL: {e}")
+        return None
 
-# Gera o PDF com o WeasyPrint
-HTML(string=html_conteudo).write_pdf("relatorio_clima.pdf")
+# Função principal
+def gerar_relatorio_pdf():
+    conn = conectar_banco()
+    if conn:
+        cursor = conn.cursor()
 
-print("✅ Relatório gerado com sucesso em HTML e PDF!")
+        # Obter o conteúdo HTML gerado no banco
+        html_conteudo = obter_html_do_banco(cursor)
+        
+        if html_conteudo:
+            # Gerar PDF a partir do HTML
+            sucesso = converter_html_para_pdf(html_conteudo, "relatorio_clima.pdf")
+            if sucesso:
+                print("✅ Relatório gerado com sucesso em PDF!")
+            else:
+                print("❌ Erro ao gerar o PDF.")
+        else:
+            print("❌ Erro ao obter conteúdo HTML do banco de dados.")
+        
+        # Fechar a conexão
+        cursor.close()
+        conn.close()
+    else:
+        print("❌ Não foi possível conectar ao banco de dados.")
 
-# Fecha a conexão
-cursor.close()
-conn.close()
+# Rodar a função principal
+if __name__ == "__main__":
+    gerar_relatorio_pdf()
